@@ -5,6 +5,9 @@ import Footer from "./footer";
 import Teacher from "./teacher"
 import "../index.css";
 import {useHistory} from 'react-router-dom'
+import Provider from "./provider"
+import Context from "./context"
+// import context from "./context";
 
 
 
@@ -14,19 +17,23 @@ const Login = () => {
     const [passD,setPass]=useState("");
     const history = useHistory();
 
-    const hadleClick=()=>{
+    const hadleClick=(e)=>{
         // setLogin([e.target.name]=e.target.value);/
-        if(loginD==="harish.alhate@gmail.com" && passD==="Harish123"){
+        let flag = true;
+        e.map((data)=>{
+          if(loginD===data.email && passD===data.password){
+            flag=false;
             history.push("/teach");
-        }
-        else{
-            alert("Enter the right details","Email:",loginD,"Pass:",passD);
-        }
-        
+          }
+        })
+
+        if(flag){alert("Enter the right details","Email:",loginD,"Pass:",passD)}
     }
 
   return (
-    <React.Fragment>
+    <Context.Consumer>
+      {context =>(
+     <React.Fragment> 
       <Header />
       <div className="back" > 
       <div className="container-fluid box">
@@ -53,17 +60,19 @@ const Login = () => {
             name="password"
             className="form-control"
             id="exampleInputPassword1"
-            onChange={e => setPass(e.target.value)}
+            onChange={e => {setPass(e.target.value)}}
           />
         </div>
-        <button type="submit" className="btn btn-primary" onClick={hadleClick}>
+        <button type="submit" className="btn btn-primary" onClick=  {()=>hadleClick(context.data)}>
           Submit
         </button>
       </form>
       </div>
       </div>
       <Footer />
-    </React.Fragment>
+    </React.Fragment> 
+    )}
+    </Context.Consumer>
   );
 };
 
